@@ -1,4 +1,4 @@
 You can use the following Entity Relationship Diagram (ERD) to figure out what data to store, the entities, their attributes and also how entities 
 relate to other entities.
 
- 
+![erd](https://github.com/Sanket-DataMinds/sql_practice_problem/blob/main/Hospital_db%20schema.png) 
