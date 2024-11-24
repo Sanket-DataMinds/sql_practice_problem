@@ -19,8 +19,7 @@ The hospital test contains 50 questions and consists of 3 category:
 
 ## Quastions & Answers
 
-> Want to help this repository? Feel free to contribute by submitting a custom solution to be added to the questions.
-
+ 
 ---
 
 ### Section 1 : Easy
