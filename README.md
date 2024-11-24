@@ -614,25 +614,26 @@ Questions 1- 10
    etc.
 
 ```sql
-SELECT (weight / 10) * 10 AS weight_group, COUNT(*) AS patients_in_this_weight_group
-FROM patients
-GROUP BY weight_group
-ORDER BY weight_group DESC;
+select 
+   ((weight/10)*10) as weight_group, 
+   count(*) as patients_in_group
+ from patients
+ group by 1
+ order by 1 desc;
 ```
 
 2. Show patient_id, weight, height, isObese from the patients table. Display isObese as a boolean 0 or 1. Obese is defined as weight(kg)/(height(m)
    . Weight is in units kg. Height is in units cm.
 
 ```sql
-SELECT patient_id,
-       weight,
-       height,
-       CASE
-           WHEN weight / POWER(height / 100.00, 2) >= 30
-               THEN 1
-           ELSE 0
-           END AS isobese
-FROM patients;
+select patient_id,
+	weight,
+	height,
+	case
+		when weight/power (height/100.00,2) >=30 then  1
+	    else 0
+	end as isObese
+from patients;
 -- we need to divide by 100.00 as if we divide int by int, the decimals will be truncated, ex: 100/3 = 33 BUT 100/3.0 = 33.333333333
 ```
 
@@ -641,12 +642,15 @@ FROM patients;
    Check patients, admissions, and doctors tables for required information.
 
 ```sql
-SELECT p.patient_id, p.first_name, p.last_name, d.speciality
-FROM patients p
-         JOIN admissions a ON p.patient_id = a.patient_id
-         JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-WHERE a.diagnosis = 'Epilepsy'
-  AND d.first_name = 'Lisa';
+select  p.patient_id ,
+	p.first_name,
+	p.last_name,
+	d.specialty
+from patients p 
+	join admissions a on p.patient_id = a.patient_id
+	join doctors d on a.attending_doctor_id = d.doctor_id
+where a.diagnosis like 'Epilepsy%'
+and d.first_name like 'Lisa%';
 ```
 
 4. All patients who have gone through admissions, can see their medical documents on our site. Those patients are given a temporary password after
@@ -664,9 +668,12 @@ FROM patients p
          JOIN admissions a ON p.patient_id = a.patient_id;
 
 --SQL
-SELECT DISTINCT p.patient_id, CONCAT(a.patient_id, LENGTH(p.last_name), year(p.birth_date)) AS temp_password
-FROM patients p
-         JOIN admissions a ON p.patient_id = a.patient_id;
+select  distinct p.patient_id,
+	concat(p.patient_id,
+	len(p.last_name),
+	year(birth_date))as temp_password
+from patients p 
+	join admissions a on p.patient_id = a.patient_id
 ```
 
 5. Each admission costs $50 for patients without insurance, and $10 for patients with insurance. All patients with an even patient_id have insurance.
@@ -674,21 +681,33 @@ FROM patients p
    group.
 
 ```sql
-SELECT CASE WHEN a.patient_id % 2 = 0 THEN 'Yes' ELSE 'No' END AS has_insurance,
-       SUM(CASE WHEN a.patient_id % 2 = 0 THEN 10 ELSE 50 END) AS cost_after_insurance
-FROM admissions a
-GROUP BY has_insurance;
+select (case when patient_id % 2 = 0 then 'Yes' else 'No' end) as has_insurance,
+	sum(case when patient_id % 2 = 0 then 10 else 50 end) as total
+from admissions
+group by 1;
+
+--or 
+
+select 'No' as has_insurance,
+	count(*) * 50 as cost
+from admissions
+where patient_id % 2 = 1 group by has_insurance
+union
+select 'Yes' as has_insurance,
+	count(*) * 10 as cost
+from admissions
+where patient_id % 2 = 0 group by has_insurance
 ```
 
 6. Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name
 
 ```sql
 SELECT pr.province_name
-FROM province_names pr
-         JOIN patients p ON pr.province_id = p.province_id
-GROUP BY province_name
-HAVING SUM(CASE WHEN p.gender = 'M' THEN 1 ELSE 0 END) > SUM(CASE WHEN p.gender = 'F' THEN 1 ELSE 0 END);
-
+FROM patients AS pa
+  JOIN province_names AS pr ON pa.province_id = pr.province_id
+GROUP BY pr.province_name
+HAVING
+  SUM(gender = 'M') > SUM(gender = 'F');
 /*
 COUNT is used to count the number of rows that meet a certain criteria, 
 while SUM is used to add up the values in a particular column for rows that meet a certain criteria.
@@ -716,54 +735,40 @@ WHERE first_name SIMILAR TO '^[a-zA-Z]{2}r'
   AND city = 'Kingston';
 
 -- SQL
-SELECT *
-FROM patients
-WHERE first_name LIKE '__r%' --first_name LIKE '^[a-zA-Z]{2}r'
-  AND gender = 'F'
-  AND month(birth_date) IN (2, 5, 12)
-  AND weight BETWEEN 60 AND 80
-  AND patient_id % 2 = 1
-  AND city = 'Kingston';
+select * 
+from patients
+where first_name like '__r%' and 
+month(birth_date) in (2,5,12)
+and weight between 60 and 80
+and patient_id %2 = 1
+and city = 'Kingston'
 
 ```
 
 8. Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.
 
 ```sql
-SELECT CONCAT(ROUND(SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2), '%')
-FROM patients;
-
-SELECT ROUND(100 * AVG(gender = 'M'), 2) || '%' AS percent_of_male_patients
-FROM patients;
+select concat(round(sum(gender = 'M')*100.00/count(*),2),'%') as male_percentage
+from patients
 ```
 
 9. For each day display the total amount of admissions on that day. Display the amount changed from the previous date.
 
 ```sql
-WITH temp_table AS (SELECT admission_date,
-                           COUNT(*) AS total_admissions
-                    FROM admissions
-                    GROUP BY admission_date
-                    ORDER BY admission_date DESC)
-SELECT admission_date,
-       total_admissions,
-       total_admissions - LAG(total_admissions, 1, NULL) OVER (ORDER BY admission_date DESC) AS change
-FROM temp_table;
-
--- Alternative 
-SELECT admission_date,
-       COUNT(admission_date)                                                             AS admission_day,
-       COUNT(admission_date) - LAG(COUNT(admission_date)) OVER (ORDER BY admission_date) AS admission_count_change
-FROM admissions
-GROUP BY admission_date;
+select admission_date,
+       count(admission_date) as admission_day,
+       count(admission_date) - lag(count(admission_date)) over (order by admission_date) as admission_count_change
+from admissions
+group by admission_date;
 ```
 
 10. Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.
 
 ```sql
-WITH temp_table AS (SELECT province_name FROM province_names ORDER BY (province_name = 'Ontario') DESC, province_name ASC)
-SELECT province_name
-FROM temp_table;
+select province_name
+from province_names
+order by province_name = 'Ontario' DESC, province_name;
+
 
 /*
 This query uses a combination of the ORDER BY clause and a boolean expression to prioritize the 'Ontario' record.
@@ -776,11 +781,11 @@ The rest of the records are then sorted in ascending order by the name column.
 11. We need a breakdown for the total amount of admissions each doctor has started each year. Show the doctor_id, doctor_full_name, specialty, year, total_admissions for that year.
 
 ```sql
-SELECT d.doctor_id, CONCAT(d.first_name,' ',d.last_name) AS doctor_full_name,
-		 d.specialty,
-       YEAR(a.admission_date) AS selected_year,
-       COUNT(*) AS total_admissions
-FROM admissions a
-LEFT JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-GROUP BY doctor_id, selected_year
+SELECT
+	d.doctor_id,
+	concat(d.first_name,' ',d.last_name) AS full_name,
+	d.specialty,year(admission_date) as selected_year,count(a.admission_date)
+from doctors d 
+	left join admissions a on d.doctor_id = a.attending_doctor_id
+group by  1,4;
 ```
