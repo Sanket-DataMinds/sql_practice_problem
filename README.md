@@ -1,10 +1,12 @@
 ## www.sql-practice.com
 
-This repository is designed for students and professionals looking to refine and enhance their SQL skills for career advancement. While the website (https://www.sql-practice.com) SQL Practice offers an educational and user-friendly experience, it does not provide a comprehensive solution book either on the site or on GitHub. To address this gap, this repository includes answers with alternative solutions for each question.
+This repository is designed for students and professionals looking to refine and enhance their SQL skills for career advancement. While the website https://www.sql-practice.com SQL Practice offers an educational and user-friendly experience, it does not provide a comprehensive solution book either on the site or on GitHub. To address this gap, this repository includes answers with alternative solutions for each question.
 
 The primary Database Management System (DBMS) used here is PostgreSQL. As a result, some queries may work exclusively in PostgreSQL and not in other DBMS platforms like SQL Server or MySQL due to slight variations in syntax. For scenarios like date and time operations, standard SQL queries have also been included to ensure broader compatibility.
 
 Mock data for this repository was generated using www.mockaroo.com to allow effective practice of SQL queries with meaningful outputs in a local environment. While the dataset used here is not identical to the large dataset available on the website, using the website is recommended whenever possible, as it provides a good way to track progress online. For convenience and a quick start, the repository includes SQL database files to help with schema creation and data insertion.
+
+
 
 
 The hospital test contains 50 questions and consists of 3 category:
