@@ -1,13 +1,10 @@
 ## www.sql-practice.com
 
-This repository is dedicated to students and professionals who would like to brush up and advance their SQL skills for their careers. I found (https://www.sql-practice.com) educational and the web site user friendly however there wasn’t the complete solution book shared on the web site neither on GitHub. So now you can get the answers with alternative solutions for each question 
+This repository is designed for students and professionals looking to refine and enhance their SQL skills for career advancement. While the website (https://www.sql-practice.com) SQL Practice offers an educational and user-friendly experience, it does not provide a comprehensive solution book either on the site or on GitHub. To address this gap, this repository includes answers with alternative solutions for each question.
 
-I have used PostgreSQL as main Database Management Systems (DBMS) and therefore you may encounter some queries that work in PostgreSQL may not work in
-other DBMS such as SQL Server or MySQL as some implementations slight vary in syntax. For such cases, for example, in date and time operations 
-I included standart SQL queries as well.
+The primary Database Management System (DBMS) used here is PostgreSQL. As a result, some queries may work exclusively in PostgreSQL and not in other DBMS platforms like SQL Server or MySQL due to slight variations in syntax. For scenarios like date and time operations, standard SQL queries have also been included to ensure broader compatibility.
 
-I populated mockdata using www.mockaroo.com to effectively practise the queries and get some output while working locally. Note that it is not the same large dataset used on the web site, so I suggest you use the web site itself as long as you have internet connection, which is also good for tracking your progress. You may use the sql database files given in the repository for convenience and a rapid start in creating schemas and inserting datasets.
-
+Mock data for this repository was generated using www.mockaroo.com to allow effective practice of SQL queries with meaningful outputs in a local environment. While the dataset used here is not identical to the large dataset available on the website, using the website is recommended whenever possible, as it provides a good way to track progress online. For convenience and a quick start, the repository includes SQL database files to help with schema creation and data insertion.
 
 
 The hospital test contains 50 questions and consists of 3 category:
