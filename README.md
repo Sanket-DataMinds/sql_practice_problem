@@ -210,6 +210,7 @@ select
 from patients
 where allergies is not null and city = 'Hamilton';
 ```
+---
 
 ### Section 2 : Medium
 
