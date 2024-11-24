@@ -9,7 +9,7 @@ Mock data for this repository was generated using www.mockaroo.com to allow effe
 
 
 
-The hospital test contains 50 questions and consists of 3 category:
+The hospital test contains 52 questions and consists of 3 category:
 
 - Easy
 - Medium
